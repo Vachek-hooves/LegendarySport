@@ -7,6 +7,15 @@ import WelcomeScreen from './screen/WelcomeScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+     
+    </Tab.Navigator>
+  );
+};
+
 function App() {
   return (
     <AppContextProvider>
