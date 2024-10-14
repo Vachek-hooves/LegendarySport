@@ -6,7 +6,6 @@ const BALL_SIZE = 20;
 const GATE_WIDTH = 100;
 const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
-const FIELD_MARGIN = 50;
 const SCOREBOARD_HEIGHT = 80; // Adjust this value based on your scoreboard's actual height
 
 const TabSimulatorScreen = () => {
@@ -16,6 +15,8 @@ const TabSimulatorScreen = () => {
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
+
+  const TOUCH_RADIUS = BALL_SIZE * 2; // Double the touch area
 
   function getInitialBallPosition() {
     return {
@@ -33,16 +34,41 @@ const TabSimulatorScreen = () => {
     };
   }
 
-  const handleBallPress = () => {
-    if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
-      ballVelocity.current = {
-        ...ballVelocity.current,
-        dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
-      };
+  const handleBallPress = (event) => {
+    console.log('Touch received');
+    const { locationX, locationY } = event.nativeEvent;
+    const ballCenterX = ballPosition.x + BALL_SIZE / 2;
+    const ballCenterY = ballPosition.y + BALL_SIZE / 2;
+    
+    // Calculate distance between touch point and ball center
+    const distance = Math.sqrt(
+      Math.pow(locationX - ballCenterX, 2) + Math.pow(locationY - ballCenterY, 2)
+    );
+    
+    console.log('Touch event:', { locationX, locationY, ballCenterX, ballCenterY, distance, touchRadius: TOUCH_RADIUS / 2 });
+    
+    // Check if touch is within the enlarged touch area
+    if (distance <= TOUCH_RADIUS / 2) {
+      console.log('Touch within radius');
+      if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
+        console.log('Ball in lower half, kicking');
+        ballVelocity.current = {
+          ...ballVelocity.current,
+          dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
+        };
+        console.log('Ball kicked!', ballVelocity.current);
+        // Force an update to ensure the new velocity is applied immediately
+        setBallPosition(prevPos => ({ ...prevPos }));
+      } else {
+        console.log('Ball not in lower half, not kicking');
+      }
+    } else {
+      console.log('Touch outside radius');
     }
   };
 
   useEffect(() => {
+    console.log('Game loop started');
     ballVelocity.current = getRandomVelocity();
 
     const updateGame = () => {
@@ -59,11 +85,13 @@ const TabSimulatorScreen = () => {
 
           // Check if ball is out of bounds (touched top or bottom borders)
           if (newY <= SCOREBOARD_HEIGHT || newY >= height - BALL_SIZE) {
+            console.log('Ball out of bounds, resetting');
             return resetBallPosition('out');
           }
 
           // Bounce off left and right walls
           if (newX <= 0 || newX >= width - BALL_SIZE) {
+            console.log('Ball hit side wall, bouncing');
             ballVelocity.current.dx = -ballVelocity.current.dx;
             newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
           }
@@ -72,11 +100,13 @@ const TabSimulatorScreen = () => {
           if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT && 
               newX > (width - GATE_WIDTH) / 2 && 
               newX < (width + GATE_WIDTH) / 2) {
+            console.log('Goal scored by player');
             setScores(prev => ({ ...prev, bottom: prev.bottom + 1 }));
             return resetBallPosition('bottom');
           } else if (newY >= height - GATE_HEIGHT - BALL_SIZE && 
                      newX > (width - GATE_WIDTH) / 2 && 
                      newX < (width + GATE_WIDTH) / 2) {
+            console.log('Goal scored by computer');
             setScores(prev => ({ ...prev, top: prev.top + 1 }));
             return resetBallPosition('top');
           }
@@ -95,13 +125,14 @@ const TabSimulatorScreen = () => {
   }, []);
 
   const resetBallPosition = (reason) => {
+    console.log('Resetting ball position, reason:', reason);
     if (reason === 'bottom') {
-      // User scored, increase speed by 10%
       ballSpeed.current *= 1.1;
-      console.log('New ball speed:', ballSpeed.current); // For debugging
+      console.log('New ball speed:', ballSpeed.current);
     }
     ballVelocity.current = getRandomVelocity();
-    ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Always ensure downward movement
+    ballVelocity.current.dy = Math.abs(ballVelocity.current.dy);
+    console.log('New ball velocity:', ballVelocity.current);
     return getInitialBallPosition();
   };
 
@@ -148,10 +179,10 @@ const styles = StyleSheet.create({
     left: (width - GATE_WIDTH) / 2,
   },
   topGate: {
-    top: SCOREBOARD_HEIGHT + FIELD_MARGIN,
+    top: SCOREBOARD_HEIGHT,
   },
   bottomGate: {
-    bottom: FIELD_MARGIN,
+    bottom: 0,
   },
   ball: {
     position: 'absolute',
