@@ -7,6 +7,7 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
+  Image,
 } from 'react-native';
 import { COLOR } from '../../constant/color';
 
@@ -175,7 +176,12 @@ const StackFootballPlay = () => {
         style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]}
         onPress={handleBallPress}
         activeOpacity={0.5}
-      />
+      >
+        <Image
+          source={require('../../assets/image/ui/ball.png')}
+          style={{ height: '120%', width: '120%' }}
+        />
+      </TouchableOpacity>
       <View style={[styles.gate, styles.bottomGate]} />
       {/* </View> */}
     </ImageBackground>
@@ -209,19 +215,21 @@ const styles = StyleSheet.create({
   },
   topGate: {
     top: SCOREBOARD_HEIGHT + height * 0.12,
-    zIndex:1
+    zIndex: 1,
   },
   bottomGate: {
     bottom: '15%', // Adjust this value to change the bottom gate position
-    zIndex:10
+    zIndex: 10,
   },
   ball: {
     position: 'absolute',
     width: BALL_SIZE,
     height: BALL_SIZE,
     borderRadius: BALL_SIZE / 2,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     zIndex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scoreboard: {
     flexDirection: 'row',
