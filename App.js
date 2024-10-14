@@ -16,8 +16,8 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
   return (
     <LinearGradient
       colors={['#00FFFF', '#FF00FF', '#FF1493']}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
       style={{
         flexDirection: 'row',
         height: 80,
@@ -61,7 +61,12 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
             onPress={onPress}
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
           >
-            <Text style={{ color: isFocused ? '#ffffff' : 'rgba(255,255,255,0.6)', fontWeight: 'bold' }}>
+            <Text
+              style={{
+                color: isFocused ? '#ffffff' : 'rgba(255,255,255,0.6)',
+                fontWeight: 'bold',
+              }}
+            >
               {label}
             </Text>
           </TouchableOpacity>
@@ -78,14 +83,9 @@ const TabNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen
-        name="Football"
+        name="TabFootbalIntroScreen"
         component={TabFootbalIntroScreen}
         options={{ tabBarLabel: 'Football' }}
-      />
-      <Tab.Screen
-        name="Simulator"
-        component={TabSimulatorScreen}
-        options={{ tabBarLabel: 'Simulator' }}
       />
     </Tab.Navigator>
   );
