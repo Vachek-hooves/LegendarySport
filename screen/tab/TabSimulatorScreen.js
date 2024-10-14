@@ -11,7 +11,8 @@ const SCOREBOARD_HEIGHT = 80; // Adjust this value based on your scoreboard's ac
 
 const TabSimulatorScreen = () => {
   const [ballPosition, setBallPosition] = useState(() => getInitialBallPosition());
-  const ballVelocity = useRef(getRandomVelocity());
+  const ballVelocity = useRef({ dx: 0, dy: 0 });
+  const ballSpeed = useRef(1);
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
@@ -24,11 +25,11 @@ const TabSimulatorScreen = () => {
   }
 
   function getRandomVelocity() {
-    const speed = 0.1 + Math.random() * 0.05; // Speed between 0.1 and 0.15 units per millisecond
-    const angle = (Math.random() * 60 + 60) * (Math.PI / 180); // Angle between 60 and 120 degrees
+    const baseSpeed = (0.1 + Math.random() * 0.05) * ballSpeed.current;
+    const angle = (Math.random() * 60 + 60) * (Math.PI / 180);
     return {
-      dx: speed * Math.cos(angle),
-      dy: Math.abs(speed * Math.sin(angle)) // Ensure initial downward movement
+      dx: baseSpeed * Math.cos(angle),
+      dy: Math.abs(baseSpeed * Math.sin(angle))
     };
   }
 
@@ -36,12 +37,14 @@ const TabSimulatorScreen = () => {
     if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
       ballVelocity.current = {
         ...ballVelocity.current,
-        dy: -Math.abs(ballVelocity.current.dy) - 0.1 // Kick the ball upwards with extra speed
+        dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
       };
     }
   };
 
   useEffect(() => {
+    ballVelocity.current = getRandomVelocity();
+
     const updateGame = () => {
       const now = Date.now();
       const frameTime = now - lastUpdateTime.current;
@@ -92,6 +95,11 @@ const TabSimulatorScreen = () => {
   }, []);
 
   const resetBallPosition = (reason) => {
+    if (reason === 'bottom') {
+      // User scored, increase speed by 10%
+      ballSpeed.current *= 1.1;
+      console.log('New ball speed:', ballSpeed.current); // For debugging
+    }
     ballVelocity.current = getRandomVelocity();
     ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Always ensure downward movement
     return getInitialBallPosition();
