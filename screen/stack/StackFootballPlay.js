@@ -5,11 +5,11 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ImageBackground,
   Image,
 } from 'react-native';
 import { COLOR } from '../../constant/color';
+import { useAppContext } from '../../store/context';
 
 const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 30;
@@ -18,7 +18,8 @@ const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
 const SCOREBOARD_HEIGHT = 80;
 
-const StackFootballPlay = () => {
+const StackFootballPlay = ({ navigation }) => {
+  const { updateGameData } = useAppContext();
   const [ballPosition, setBallPosition] = useState(() =>
     getInitialBallPosition()
   );
@@ -29,6 +30,7 @@ const StackFootballPlay = () => {
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
   const TOUCHABLE_AREA_START =
     SCOREBOARD_HEIGHT + (height - SCOREBOARD_HEIGHT) * 0.4; // 60% of field from bottom
+  const [gameOver, setGameOver] = useState(false);
 
   function getInitialBallPosition() {
     return {
@@ -142,15 +144,18 @@ const StackFootballPlay = () => {
     console.log('New ball velocity:', ballVelocity.current);
 
     if (reason === 'out_bottom') {
-      // Reset position for when the ball goes below bottom gates
-      return {
-        x: width / 2 - BALL_SIZE / 2,
-        y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE + 50, // Just below the computer's gate
-      };
+      setGameOver(true);
     }
 
     return getInitialBallPosition();
   };
+
+  useEffect(() => {
+    if (gameOver) {
+      updateGameData(scores.bottom);
+      navigation.navigate('TabFootbalIntroScreen');
+    }
+  }, [gameOver, scores.bottom, updateGameData, navigation]);
 
   return (
     // <SafeAreaView style={styles.safeArea}>
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
   },
   topGate: {
     top: SCOREBOARD_HEIGHT + height * 0.12,
-    zIndex: 1,
+    zIndex: 10,
   },
   bottomGate: {
     bottom: '15%', // Adjust this value to change the bottom gate position
