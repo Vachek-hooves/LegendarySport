@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Dimensions, TouchableWithoutFeedback, Text, SafeAreaView } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 20;
@@ -7,18 +7,21 @@ const GATE_WIDTH = 100;
 const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
 const FIELD_MARGIN = 50;
+const SCOREBOARD_HEIGHT = 80; // Adjust this value based on your scoreboard's actual height
+
 const TabSimulatorScreen = () => {
   const [ballPosition, setBallPosition] = useState({ 
     x: width / 2 - BALL_SIZE / 2, 
-    y: GATE_HEIGHT 
+    y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN 
   });
   const ballVelocity = useRef(getRandomVelocity());
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
+  const [scores, setScores] = useState({ top: 0, bottom: 0 });
 
   function getRandomVelocity() {
     const speed = 0.1 + Math.random() * 0.05; // Speed between 0.1 and 0.15 units per millisecond
-    const angle = (Math.random() * 120 + 30) * (Math.PI / 180); // Angle between 30 and 150 degrees
+    const angle = (Math.random() * 60 + 60) * (Math.PI / 180); // Angle between 60 and 120 degrees
     return {
       dx: speed * Math.cos(angle),
       dy: speed * Math.sin(angle)
@@ -26,7 +29,7 @@ const TabSimulatorScreen = () => {
   }
 
   const handleBallPress = () => {
-    if (ballPosition.y > height / 2) {
+    if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
       ballVelocity.current = {
         ...ballVelocity.current,
         dy: -Math.abs(ballVelocity.current.dy) - 0.1 // Kick the ball upwards with extra speed
@@ -52,15 +55,24 @@ const TabSimulatorScreen = () => {
             ballVelocity.current.dx = -ballVelocity.current.dx;
           }
 
-          // Reset if ball reaches bottom or top
-          if (newY >= height - GATE_HEIGHT - BALL_SIZE || newY <= GATE_HEIGHT) {
+          // Check for goals and update scores
+          if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN && newX > (width - GATE_WIDTH) / 2 && newX < (width + GATE_WIDTH) / 2) {
+            setScores(prev => ({ ...prev, bottom: prev.bottom + 1 }));
+            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
+          } else if (newY >= height - GATE_HEIGHT - BALL_SIZE && newX > (width - GATE_WIDTH) / 2 && newX < (width + GATE_WIDTH) / 2) {
+            setScores(prev => ({ ...prev, top: prev.top + 1 }));
+            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
+          }
+
+          // Reset if ball reaches bottom or top without scoring
+          if (newY >= height - GATE_HEIGHT - BALL_SIZE || newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN) {
             ballVelocity.current = getRandomVelocity();
-            return { x: width / 2 - BALL_SIZE / 2, y: GATE_HEIGHT };
+            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
           }
 
           return {
             x: Math.max(0, Math.min(newX, width - BALL_SIZE)),
-            y: Math.max(GATE_HEIGHT, Math.min(newY, height - GATE_HEIGHT - BALL_SIZE)),
+            y: Math.max(SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN, Math.min(newY, height - GATE_HEIGHT - BALL_SIZE)),
           };
         });
 
@@ -75,19 +87,36 @@ const TabSimulatorScreen = () => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={handleBallPress}>
-      <View style={styles.container}>
-        <View style={[styles.gate, styles.topGate]} />
-        <View style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]} />
-        <View style={[styles.gate, styles.bottomGate]} />
-      </View>
-    </TouchableWithoutFeedback>
+    <SafeAreaView style={styles.safeArea}>
+      <TouchableWithoutFeedback onPress={handleBallPress}>
+        <View style={styles.container}>
+          <View style={styles.scoreboard}>
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreLabel}>Computer</Text>
+              <Text style={styles.scoreText}>{scores.top}</Text>
+            </View>
+            <Text style={styles.scoreDivider}>:</Text>
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreLabel}>You</Text>
+              <Text style={styles.scoreText}>{scores.bottom}</Text>
+            </View>
+          </View>
+          <View style={[styles.gate, styles.topGate]} />
+          <View style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]} />
+          <View style={[styles.gate, styles.bottomGate]} />
+        </View>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
 export default TabSimulatorScreen;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F0F0F0',
+  },
   container: {
     flex: 1,
     backgroundColor: '#F0F0F0',
@@ -100,7 +129,7 @@ const styles = StyleSheet.create({
     left: (width - GATE_WIDTH) / 2,
   },
   topGate: {
-    top: FIELD_MARGIN,
+    top: SCOREBOARD_HEIGHT + FIELD_MARGIN,
   },
   bottomGate: {
     bottom: FIELD_MARGIN,
@@ -111,5 +140,39 @@ const styles = StyleSheet.create({
     height: BALL_SIZE,
     borderRadius: BALL_SIZE / 2,
     backgroundColor: 'red',
+  },
+  scoreboard: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  scoreContainer: {
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginBottom: 5,
+  },
+  scoreText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFF',
+  },
+  scoreDivider: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginHorizontal: 10,
   },
 });
