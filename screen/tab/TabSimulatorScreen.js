@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, TouchableWithoutFeedback, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Dimensions, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 20;
@@ -15,8 +15,6 @@ const TabSimulatorScreen = () => {
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
-
-  const TOUCH_RADIUS = BALL_SIZE * 6; // Double the touch area
 
   function getInitialBallPosition() {
     return {
@@ -34,36 +32,19 @@ const TabSimulatorScreen = () => {
     };
   }
 
-  const handleBallPress = (event) => {
-    console.log('Touch received');
-    const { locationX, locationY } = event.nativeEvent;
-    const ballCenterX = ballPosition.x + BALL_SIZE / 2;
-    const ballCenterY = ballPosition.y + BALL_SIZE / 2;
-    
-    // Calculate distance between touch point and ball center
-    const distance = Math.sqrt(
-      Math.pow(locationX - ballCenterX, 2) + Math.pow(locationY - ballCenterY, 2)
-    );
-    
-    // console.log('Touch event:', { locationX, locationY, ballCenterX, ballCenterY, distance, touchRadius: TOUCH_RADIUS / 2 });
-    
-    // Check if touch is within the enlarged touch area
-    if (distance <= TOUCH_RADIUS / 2) {
-      console.log('Touch within radius');
-      if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
-        console.log('Ball in lower half, kicking');
-        ballVelocity.current = {
-          ...ballVelocity.current,
-          dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
-        };
-        console.log('Ball kicked!', ballVelocity.current);
-        // Force an update to ensure the new velocity is applied immediately
-        setBallPosition(prevPos => ({ ...prevPos }));
-      } else {
-        console.log('Ball not in lower half, not kicking');
-      }
+  const handleBallPress = () => {
+    console.log('Ball pressed');
+    if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
+      console.log('Ball in lower half, kicking');
+      ballVelocity.current = {
+        ...ballVelocity.current,
+        dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
+      };
+      console.log('Ball kicked!', ballVelocity.current);
+      // Force an update to ensure the new velocity is applied immediately
+      setBallPosition(prevPos => ({ ...prevPos }));
     } else {
-      console.log('Touch outside radius');
+      console.log('Ball not in lower half, not kicking');
     }
   };
 
@@ -138,24 +119,26 @@ const TabSimulatorScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableWithoutFeedback onPress={handleBallPress}>
-        <View style={styles.container}>
-          <View style={styles.scoreboard}>
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreLabel}>Computer</Text>
-              <Text style={styles.scoreText}>{scores.top}</Text>
-            </View>
-            <Text style={styles.scoreDivider}>:</Text>
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreLabel}>You</Text>
-              <Text style={styles.scoreText}>{scores.bottom}</Text>
-            </View>
+      <View style={styles.container}>
+        <View style={styles.scoreboard}>
+          <View style={styles.scoreContainer}>
+            <Text style={styles.scoreLabel}>Computer</Text>
+            <Text style={styles.scoreText}>{scores.top}</Text>
           </View>
-          <View style={[styles.gate, styles.topGate]} />
-          <View style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]} />
-          <View style={[styles.gate, styles.bottomGate]} />
+          <Text style={styles.scoreDivider}>:</Text>
+          <View style={styles.scoreContainer}>
+            <Text style={styles.scoreLabel}>You</Text>
+            <Text style={styles.scoreText}>{scores.bottom}</Text>
+          </View>
         </View>
-      </TouchableWithoutFeedback>
+        <View style={[styles.gate, styles.topGate]} />
+        <TouchableOpacity
+          style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]}
+          onPress={handleBallPress}
+          activeOpacity={0.7}
+        />
+        <View style={[styles.gate, styles.bottomGate]} />
+      </View>
     </SafeAreaView>
   );
 };
