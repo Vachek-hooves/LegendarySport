@@ -15,7 +15,7 @@ const TabFootballIntroScreen = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/image/bg/FootballField.png')}
+      source={require('../../assets/image/bg/footballBG.jpg')}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
@@ -34,7 +34,9 @@ const TabFootballIntroScreen = ({ navigation }) => {
               style={styles.playButton}
             >
               <LinearGradient
-                colors={['#4c669f', '#3b5998', '#192f6a']}
+                colors={['#4CAF50', '#45a049', '#388E3C']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
                 style={styles.gradient}
               >
                 <Text style={styles.buttonText}>Play Now</Text>
@@ -51,6 +53,8 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
+    // height:'110%',
+    
   },
   container: {
     flex: 1,
@@ -87,6 +91,11 @@ const styles = StyleSheet.create({
   playButton: {
     borderRadius: 25,
     overflow: 'hidden',
+    elevation: 5, // for Android shadow
+    shadowColor: '#000', // for iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   gradient: {
     paddingVertical: 15,
@@ -97,6 +106,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
