@@ -6,8 +6,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppContextProvider } from './store/context';
 import WelcomeScreen from './screen/WelcomeScreen';
-import { TabFootbalIntroScreen, TabSimulatorScreen } from './screen/tab';
-import { StackFootballPlay } from './screen/stack';
+import {
+  TabFootbalIntroScreen,
+  TabQuizScreen,
+  TabSimulatorScreen,
+} from './screen/tab';
+import { StackFootballPlay, StackQuizLevelScreen } from './screen/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,6 +91,11 @@ const TabNavigator = () => {
         component={TabFootbalIntroScreen}
         options={{ tabBarLabel: 'Football' }}
       />
+      <Tab.Screen
+        name="TabQuizScreen"
+        component={TabQuizScreen}
+        options={{ tabBarLabel: 'Quiz' }}
+      />
     </Tab.Navigator>
   );
 };
@@ -101,6 +110,10 @@ function App() {
           <Stack.Screen
             name="StackFootballPlay"
             component={StackFootballPlay}
+          />
+          <Stack.Screen
+            name="StackQuizLevelScreen"
+            component={StackQuizLevelScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>
