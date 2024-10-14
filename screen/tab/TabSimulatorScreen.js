@@ -16,7 +16,7 @@ const TabSimulatorScreen = () => {
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
 
-  const TOUCH_RADIUS = BALL_SIZE * 2; // Double the touch area
+  const TOUCH_RADIUS = BALL_SIZE * 6; // Double the touch area
 
   function getInitialBallPosition() {
     return {
@@ -45,7 +45,7 @@ const TabSimulatorScreen = () => {
       Math.pow(locationX - ballCenterX, 2) + Math.pow(locationY - ballCenterY, 2)
     );
     
-    console.log('Touch event:', { locationX, locationY, ballCenterX, ballCenterY, distance, touchRadius: TOUCH_RADIUS / 2 });
+    // console.log('Touch event:', { locationX, locationY, ballCenterX, ballCenterY, distance, touchRadius: TOUCH_RADIUS / 2 });
     
     // Check if touch is within the enlarged touch area
     if (distance <= TOUCH_RADIUS / 2) {
