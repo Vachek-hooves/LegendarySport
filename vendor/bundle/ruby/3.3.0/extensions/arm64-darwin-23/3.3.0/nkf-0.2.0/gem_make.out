@@ -1,0 +1,18 @@
+current directory: /Users/v.kopytov/Documents/UPSTARS/BOILERPLATE/ReactNativeTemplate/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+/opt/homebrew/opt/ruby/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/v.kopytov/Documents/UPSTARS/BOILERPLATE/ReactNativeTemplate/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241013-25497-azby10 sitelibdir\=./.gem.20241013-25497-azby10 clean
+
+current directory: /Users/v.kopytov/Documents/UPSTARS/BOILERPLATE/ReactNativeTemplate/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241013-25497-azby10 sitelibdir\=./.gem.20241013-25497-azby10
+compiling nkf.c
+linking shared-object nkf.bundle
+
+current directory: /Users/v.kopytov/Documents/UPSTARS/BOILERPLATE/ReactNativeTemplate/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241013-25497-azby10 sitelibdir\=./.gem.20241013-25497-azby10 install
+/usr/bin/install -c -m 0755 nkf.bundle ./.gem.20241013-25497-azby10
+
+current directory: /Users/v.kopytov/Documents/UPSTARS/BOILERPLATE/ReactNativeTemplate/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241013-25497-azby10 sitelibdir\=./.gem.20241013-25497-azby10 clean
