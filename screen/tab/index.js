@@ -1,3 +1,3 @@
 import TabSimulatorScreen from "./TabSimulatorScreen";
-
-export {TabSimulatorScreen}
+import TabFootbalIntroScreen from "./TabFootbalIntroScreen";
+export {TabSimulatorScreen,TabFootbalIntroScreen}
