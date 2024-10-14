@@ -12,7 +12,7 @@ import { COLOR } from '../../constant/color';
 
 const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 30;
-const GATE_WIDTH = 120;
+const GATE_WIDTH = width * 0.3;
 const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
 const SCOREBOARD_HEIGHT = 80;
@@ -32,7 +32,7 @@ const StackFootballPlay = () => {
   function getInitialBallPosition() {
     return {
       x: width / 2 - BALL_SIZE / 2,
-      y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE+50, // Just below the computer's gate
+      y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE + 50, // Just below the computer's gate
     };
   }
 
@@ -79,22 +79,35 @@ const StackFootballPlay = () => {
 
           // Constrain ball movement to the ImageBackground area
           newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
-          newY = Math.max(SCOREBOARD_HEIGHT, Math.min(newY, height - BALL_SIZE));
+          newY = Math.max(
+            SCOREBOARD_HEIGHT,
+            Math.min(newY, height - BALL_SIZE)
+          );
 
           // Check if ball is out of bounds (touched top or bottom borders)
-          if (newY <= SCOREBOARD_HEIGHT || newY >= height - BALL_SIZE) {
-            console.log('Ball out of bounds, resetting');
+          if (newY <= SCOREBOARD_HEIGHT) {
             return resetBallPosition('out');
+          } else if (newY >= height - BALL_SIZE) {
+            // Check if it's a goal or just out at the bottom
+            if (
+              newX > (width - GATE_WIDTH) / 2 &&
+              newX < (width + GATE_WIDTH) / 2
+            ) {
+              console.log('Goal scored by computer');
+              setScores((prev) => ({ ...prev, top: prev.top + 1 }));
+              return resetBallPosition('top');
+            } else {
+              return resetBallPosition('out_bottom');
+            }
           }
 
           // Bounce off left and right walls
           if (newX <= 0 || newX >= width - BALL_SIZE) {
-            console.log('Ball hit side wall, bouncing');
             ballVelocity.current.dx = -ballVelocity.current.dx;
             newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
           }
 
-          // Check for goals and update scores
+          // Check for goals at the top gate
           if (
             newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT &&
             newX > (width - GATE_WIDTH) / 2 &&
@@ -103,14 +116,6 @@ const StackFootballPlay = () => {
             console.log('Goal scored by player');
             setScores((prev) => ({ ...prev, bottom: prev.bottom + 1 }));
             return resetBallPosition('bottom');
-          } else if (
-            newY >= height - GATE_HEIGHT - BALL_SIZE &&
-            newX > (width - GATE_WIDTH) / 2 &&
-            newX < (width + GATE_WIDTH) / 2
-          ) {
-            console.log('Goal scored by computer');
-            setScores((prev) => ({ ...prev, top: prev.top + 1 }));
-            return resetBallPosition('top');
           }
 
           return { x: newX, y: newY };
@@ -134,6 +139,15 @@ const StackFootballPlay = () => {
     ballVelocity.current = getRandomVelocity();
     ballVelocity.current.dy = Math.abs(ballVelocity.current.dy);
     console.log('New ball velocity:', ballVelocity.current);
+
+    if (reason === 'out_bottom') {
+      // Reset position for when the ball goes below bottom gates
+      return {
+        x: width / 2 - BALL_SIZE / 2,
+        y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE + 50, // Just below the computer's gate
+      };
+    }
+
     return getInitialBallPosition();
   };
 
@@ -182,7 +196,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   imageBackground: {
-    height: '100%',
+    height: '105%',
     backgroundColor: COLOR.green,
   },
   gate: {
@@ -194,10 +208,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   topGate: {
-    top: SCOREBOARD_HEIGHT + 110,
+    top: SCOREBOARD_HEIGHT + height * 0.12,
+    zIndex:1
   },
   bottomGate: {
-    bottom: '20%', // Adjust this value to change the bottom gate position
+    bottom: '15%', // Adjust this value to change the bottom gate position
+    zIndex:10
   },
   ball: {
     position: 'absolute',
