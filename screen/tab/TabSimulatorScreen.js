@@ -10,21 +10,25 @@ const FIELD_MARGIN = 50;
 const SCOREBOARD_HEIGHT = 80; // Adjust this value based on your scoreboard's actual height
 
 const TabSimulatorScreen = () => {
-  const [ballPosition, setBallPosition] = useState({ 
-    x: width / 2 - BALL_SIZE / 2, 
-    y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN 
-  });
+  const [ballPosition, setBallPosition] = useState(() => getInitialBallPosition());
   const ballVelocity = useRef(getRandomVelocity());
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
+
+  function getInitialBallPosition() {
+    return {
+      x: width / 2 - BALL_SIZE / 2,
+      y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE // Just below the computer's gate
+    };
+  }
 
   function getRandomVelocity() {
     const speed = 0.1 + Math.random() * 0.05; // Speed between 0.1 and 0.15 units per millisecond
     const angle = (Math.random() * 60 + 60) * (Math.PI / 180); // Angle between 60 and 120 degrees
     return {
       dx: speed * Math.cos(angle),
-      dy: speed * Math.sin(angle)
+      dy: Math.abs(speed * Math.sin(angle)) // Ensure initial downward movement
     };
   }
 
@@ -56,23 +60,26 @@ const TabSimulatorScreen = () => {
           }
 
           // Check for goals and update scores
-          if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN && newX > (width - GATE_WIDTH) / 2 && newX < (width + GATE_WIDTH) / 2) {
+          if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT && 
+              newX > (width - GATE_WIDTH) / 2 && 
+              newX < (width + GATE_WIDTH) / 2) {
             setScores(prev => ({ ...prev, bottom: prev.bottom + 1 }));
-            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
-          } else if (newY >= height - GATE_HEIGHT - BALL_SIZE && newX > (width - GATE_WIDTH) / 2 && newX < (width + GATE_WIDTH) / 2) {
+            return resetBallPosition('bottom');
+          } else if (newY >= height - GATE_HEIGHT && 
+                     newX > (width - GATE_WIDTH) / 2 && 
+                     newX < (width + GATE_WIDTH) / 2) {
             setScores(prev => ({ ...prev, top: prev.top + 1 }));
-            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
+            return resetBallPosition('top');
           }
 
-          // Reset if ball reaches bottom or top without scoring
-          if (newY >= height - GATE_HEIGHT - BALL_SIZE || newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN) {
-            ballVelocity.current = getRandomVelocity();
-            return { x: width / 2 - BALL_SIZE / 2, y: SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN };
+          // Bounce off top and bottom walls if not scoring
+          if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT || newY >= height - GATE_HEIGHT) {
+            ballVelocity.current.dy = -ballVelocity.current.dy;
           }
 
           return {
             x: Math.max(0, Math.min(newX, width - BALL_SIZE)),
-            y: Math.max(SCOREBOARD_HEIGHT + GATE_HEIGHT + FIELD_MARGIN, Math.min(newY, height - GATE_HEIGHT - BALL_SIZE)),
+            y: Math.max(SCOREBOARD_HEIGHT + GATE_HEIGHT, Math.min(newY, height - GATE_HEIGHT)),
           };
         });
 
@@ -85,6 +92,16 @@ const TabSimulatorScreen = () => {
     const animationFrame = requestAnimationFrame(updateGame);
     return () => cancelAnimationFrame(animationFrame);
   }, []);
+
+  const resetBallPosition = (scoringGate) => {
+    ballVelocity.current = getRandomVelocity();
+    if (scoringGate === 'bottom') {
+      ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Ensure downward movement
+    } else {
+      ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Always ensure downward movement
+    }
+    return getInitialBallPosition();
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
