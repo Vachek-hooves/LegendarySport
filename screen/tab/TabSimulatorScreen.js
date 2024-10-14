@@ -5,13 +5,12 @@ const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 20;
 const GATE_WIDTH = 100;
 const GATE_HEIGHT = 20;
-const FIELD_MARGIN = 50; // New margin for top and bottom
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
-
+const FIELD_MARGIN = 50;
 const TabSimulatorScreen = () => {
   const [ballPosition, setBallPosition] = useState({ 
     x: width / 2 - BALL_SIZE / 2, 
-    y: FIELD_MARGIN + GATE_HEIGHT 
+    y: GATE_HEIGHT 
   });
   const ballVelocity = useRef(getRandomVelocity());
   const lastUpdateTime = useRef(Date.now());
@@ -53,15 +52,15 @@ const TabSimulatorScreen = () => {
             ballVelocity.current.dx = -ballVelocity.current.dx;
           }
 
-          // Reset if ball reaches bottom or top gates
-          if (newY >= height - FIELD_MARGIN - GATE_HEIGHT - BALL_SIZE || newY <= FIELD_MARGIN + GATE_HEIGHT) {
+          // Reset if ball reaches bottom or top
+          if (newY >= height - GATE_HEIGHT - BALL_SIZE || newY <= GATE_HEIGHT) {
             ballVelocity.current = getRandomVelocity();
-            return { x: width / 2 - BALL_SIZE / 2, y: FIELD_MARGIN + GATE_HEIGHT };
+            return { x: width / 2 - BALL_SIZE / 2, y: GATE_HEIGHT };
           }
 
           return {
             x: Math.max(0, Math.min(newX, width - BALL_SIZE)),
-            y: Math.max(FIELD_MARGIN + GATE_HEIGHT, Math.min(newY, height - FIELD_MARGIN - GATE_HEIGHT - BALL_SIZE)),
+            y: Math.max(GATE_HEIGHT, Math.min(newY, height - GATE_HEIGHT - BALL_SIZE)),
           };
         });
 
