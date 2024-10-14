@@ -34,9 +34,9 @@ const TabFootballIntroScreen = ({ navigation }) => {
               style={styles.playButton}
             >
               <LinearGradient
-                colors={['#4CAF50', '#45a049', '#388E3C']}
+                colors={['#00FFFF', '#FF00FF', '#FF1493']}
                 start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
+                end={{x: 1, y: 0}}
                 style={styles.gradient}
               >
                 <Text style={styles.buttonText}>Play Now</Text>
