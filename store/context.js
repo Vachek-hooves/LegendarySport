@@ -21,6 +21,9 @@ export const AppContextProvider = ({ children }) => {
       }
       if (storedTotalGames !== null) {
         setTotalGames(parseInt(storedTotalGames));
+      } else {
+        // Initialize totalGames to 0 if it doesn't exist
+        await AsyncStorage.setItem('totalGames', '0');
       }
     } catch (error) {
       console.error('Error loading game data:', error);
@@ -45,7 +48,7 @@ export const AppContextProvider = ({ children }) => {
   const value = {
     highScore,
     totalGames,
-    updateGameData,
+    updateGameData,loadGameData
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

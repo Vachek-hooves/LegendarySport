@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useAppContext } from '../../store/context';
 
 const TabFootballIntroScreen = ({ navigation }) => {
-  const { highScore, totalGames } = useAppContext();
+  const { highScore, totalGames, loadGameData } = useAppContext();
+
+  useEffect(() => {
+    loadGameData();
+  }, []);
 
   return (
     <ImageBackground

@@ -31,6 +31,8 @@ const StackFootballPlay = ({ navigation }) => {
   const TOUCHABLE_AREA_START =
     SCOREBOARD_HEIGHT + (height - SCOREBOARD_HEIGHT) * 0.4; // 60% of field from bottom
   const [gameOver, setGameOver] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const [isPlaying, setIsPlaying] = useState(true);
 
   function getInitialBallPosition() {
     return {
@@ -157,6 +159,27 @@ const StackFootballPlay = ({ navigation }) => {
     }
   }, [gameOver, scores.bottom, updateGameData, navigation]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setGameOver(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
     // <SafeAreaView style={styles.safeArea}>
     <ImageBackground
@@ -168,7 +191,9 @@ const StackFootballPlay = ({ navigation }) => {
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>Computer</Text>
           <Text style={styles.scoreText}>{scores.top}</Text>
-        </View>
+        </View><View style={styles.timerContainer}>
+        <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+      </View>
         <Text style={styles.scoreDivider}>:</Text>
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>You</Text>
@@ -188,6 +213,13 @@ const StackFootballPlay = ({ navigation }) => {
         />
       </TouchableOpacity>
       <View style={[styles.gate, styles.bottomGate]} />
+      
+      {/* <View style={styles.instructions}>
+        <Text style={styles.instructionText}>
+          Tap the ball when it's in the bottom half to kick it up!
+          Score as many goals as possible in 5 minutes.
+        </Text>
+      </View> */}
       {/* </View> */}
     </ImageBackground>
     // </SafeAreaView>
@@ -278,5 +310,27 @@ const styles = StyleSheet.create({
     height: (height - SCOREBOARD_HEIGHT) * 0.5, // 60% of field height
     // backgroundColor: 'rgba(255, 255, 0, 0.2)', // Semi-transparent yellow
     zIndex: 1,
+  },
+  timerContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 2,
+  },
+  timerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFF',
+  },
+  instructions: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    zIndex: 2,
+  },
+  instructionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFF',
   },
 });
