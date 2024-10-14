@@ -5,7 +5,7 @@ export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [highScore, setHighScore] = useState(0);
-  const [totalGames, setTotalGames] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
 
   useEffect(() => {
     loadGameData();
@@ -14,16 +14,16 @@ export const AppContextProvider = ({ children }) => {
   const loadGameData = async () => {
     try {
       const storedHighScore = await AsyncStorage.getItem('highScore');
-      const storedTotalGames = await AsyncStorage.getItem('totalGames');
+      const storedTotalPoints = await AsyncStorage.getItem('totalPoints');
       
       if (storedHighScore !== null) {
         setHighScore(parseInt(storedHighScore));
       }
-      if (storedTotalGames !== null) {
-        setTotalGames(parseInt(storedTotalGames));
+      if (storedTotalPoints !== null) {
+        setTotalPoints(parseInt(storedTotalPoints));
       } else {
-        // Initialize totalGames to 0 if it doesn't exist
-        await AsyncStorage.setItem('totalGames', '0');
+        // Initialize totalPoints to 0 if it doesn't exist
+        await AsyncStorage.setItem('totalPoints', '0');
       }
     } catch (error) {
       console.error('Error loading game data:', error);
@@ -32,9 +32,10 @@ export const AppContextProvider = ({ children }) => {
 
   const updateGameData = async (score) => {
     try {
-      const newTotalGames = totalGames + 1;
-      setTotalGames(newTotalGames);
-      await AsyncStorage.setItem('totalGames', newTotalGames.toString());
+      const pointsEarned = score * 10; // 10 points per goal
+      const newTotalPoints = totalPoints + pointsEarned;
+      setTotalPoints(newTotalPoints);
+      await AsyncStorage.setItem('totalPoints', newTotalPoints.toString());
 
       if (score > highScore) {
         setHighScore(score);
@@ -47,8 +48,9 @@ export const AppContextProvider = ({ children }) => {
 
   const value = {
     highScore,
-    totalGames,
-    updateGameData,loadGameData
+    totalPoints,
+    updateGameData,
+    loadGameData
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

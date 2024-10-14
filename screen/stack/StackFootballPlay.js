@@ -7,6 +7,7 @@ import {
   Text,
   ImageBackground,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import { COLOR } from '../../constant/color';
 import { useAppContext } from '../../store/context';
@@ -33,6 +34,7 @@ const StackFootballPlay = ({ navigation }) => {
   const [gameOver, setGameOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [isPlaying, setIsPlaying] = useState(true);
+  const [score, setScore] = useState(0);
 
   function getInitialBallPosition() {
     return {
@@ -120,6 +122,7 @@ const StackFootballPlay = ({ navigation }) => {
           ) {
             console.log('Goal scored by player');
             setScores((prev) => ({ ...prev, bottom: prev.bottom + 1 }));
+            setScore(prevScore => prevScore + 1);
             return resetBallPosition('bottom');
           }
 
@@ -154,10 +157,10 @@ const StackFootballPlay = ({ navigation }) => {
 
   useEffect(() => {
     if (gameOver) {
-      updateGameData(scores.bottom);
+      updateGameData(score);
       navigation.navigate('TabFootbalIntroScreen');
     }
-  }, [gameOver, scores.bottom, updateGameData, navigation]);
+  }, [gameOver, score, updateGameData, navigation]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -187,6 +190,7 @@ const StackFootballPlay = ({ navigation }) => {
       source={require('../../assets/image/bg/FootballField.png')}
     >
       {/* <View style={styles.container}> */}
+      <SafeAreaView></SafeAreaView>
       <View style={styles.scoreboard}>
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>Computer</Text>
@@ -214,13 +218,11 @@ const StackFootballPlay = ({ navigation }) => {
       </TouchableOpacity>
       <View style={[styles.gate, styles.bottomGate]} />
       
-      {/* <View style={styles.instructions}>
-        <Text style={styles.instructionText}>
-          Tap the ball when it's in the bottom half to kick it up!
-          Score as many goals as possible in 5 minutes.
-        </Text>
+      
+      {/* <View style={styles.scoreContainer}>
+        <Text style={styles.scoreText}>Score: {score}</Text>
+        <Text style={styles.scoreText}>Points: {score * 10}</Text>
       </View> */}
-      {/* </View> */}
     </ImageBackground>
     // </SafeAreaView>
   );

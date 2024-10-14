@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useAppContext } from '../../store/context';
 
 const TabFootballIntroScreen = ({ navigation }) => {
-  const { highScore, totalGames, loadGameData } = useAppContext();
+  const { highScore, totalPoints, loadGameData } = useAppContext();
 
   useEffect(() => {
     loadGameData();
@@ -30,8 +30,8 @@ const TabFootballIntroScreen = ({ navigation }) => {
           <View style={styles.content}>
             <Text style={styles.title}>Football Challenge</Text>
             <View style={styles.statsContainer}>
-              <Text style={styles.statsText}>High Score: {highScore}</Text>
-              <Text style={styles.statsText}>Total Games: {totalGames}</Text>
+              <Text style={styles.statsText}>High Score: {highScore} goals</Text>
+              <Text style={styles.statsText}>Total Points: {totalPoints}</Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('StackFootballPlay')}
