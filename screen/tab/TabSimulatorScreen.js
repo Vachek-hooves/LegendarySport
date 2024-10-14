@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Dimensions, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const BALL_SIZE = 20;
+const BALL_SIZE = 30;
 const GATE_WIDTH = 100;
 const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
