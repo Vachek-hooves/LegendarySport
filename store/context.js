@@ -1,14 +1,17 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { quiz } from '../data/quiz';
 
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [highScore, setHighScore] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [quizData, setQuizData] = useState([]);
 
   useEffect(() => {
     loadGameData();
+    initializeQuizData();
   }, []);
 
   const loadGameData = async () => {
@@ -30,6 +33,20 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  const initializeQuizData = async () => {
+    try {
+      const storedQuizData = await AsyncStorage.getItem('quizData');
+      if (storedQuizData === null) {
+        await AsyncStorage.setItem('quizData', JSON.stringify(quiz));
+        setQuizData(quiz);
+      } else {
+        setQuizData(JSON.parse(storedQuizData));
+      }
+    } catch (error) {
+      console.error('Error initializing quiz data:', error);
+    }
+  };
+
   const updateGameData = async (score) => {
     try {
       const pointsEarned = score * 10; // 10 points per goal
@@ -46,11 +63,22 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  const updateQuizData = async (newQuizData) => {
+    try {
+      await AsyncStorage.setItem('quizData', JSON.stringify(newQuizData));
+      setQuizData(newQuizData);
+    } catch (error) {
+      console.error('Error updating quiz data:', error);
+    }
+  };
+
   const value = {
     highScore,
     totalPoints,
+    quizData,
     updateGameData,
-    loadGameData
+    loadGameData,
+    updateQuizData
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
