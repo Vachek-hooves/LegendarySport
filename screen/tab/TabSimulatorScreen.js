@@ -6,7 +6,7 @@ const BALL_SIZE = 20;
 const GATE_WIDTH = 100;
 const GATE_HEIGHT = 20;
 const FIXED_TIME_STEP = 1000 / 60; // 60 FPS
-const SCOREBOARD_HEIGHT = 80; // Adjust this value based on your scoreboard's actual height
+const SCOREBOARD_HEIGHT = 80;
 
 const TabSimulatorScreen = () => {
   const [ballPosition, setBallPosition] = useState(() => getInitialBallPosition());
@@ -15,6 +15,8 @@ const TabSimulatorScreen = () => {
   const lastUpdateTime = useRef(Date.now());
   const accumulator = useRef(0);
   const [scores, setScores] = useState({ top: 0, bottom: 0 });
+
+  const TOUCHABLE_AREA_START = SCOREBOARD_HEIGHT + (height - SCOREBOARD_HEIGHT) * 0.4; // 60% of field from bottom
 
   function getInitialBallPosition() {
     return {
@@ -34,8 +36,8 @@ const TabSimulatorScreen = () => {
 
   const handleBallPress = () => {
     console.log('Ball pressed');
-    if (ballPosition.y > (height + SCOREBOARD_HEIGHT) / 2) {
-      console.log('Ball in lower half, kicking');
+    if (ballPosition.y >= TOUCHABLE_AREA_START) {
+      console.log('Ball in touchable area, kicking');
       ballVelocity.current = {
         ...ballVelocity.current,
         dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
@@ -44,7 +46,7 @@ const TabSimulatorScreen = () => {
       // Force an update to ensure the new velocity is applied immediately
       setBallPosition(prevPos => ({ ...prevPos }));
     } else {
-      console.log('Ball not in lower half, not kicking');
+      console.log('Ball not in touchable area, not kicking');
     }
   };
 
@@ -132,10 +134,11 @@ const TabSimulatorScreen = () => {
           </View>
         </View>
         <View style={[styles.gate, styles.topGate]} />
+        <View style={styles.touchableArea} />
         <TouchableOpacity
           style={[styles.ball, { left: ballPosition.x, top: ballPosition.y }]}
           onPress={handleBallPress}
-          activeOpacity={0.7}
+          activeOpacity={0.5}
         />
         <View style={[styles.gate, styles.bottomGate]} />
       </View>
@@ -173,6 +176,7 @@ const styles = StyleSheet.create({
     height: BALL_SIZE,
     borderRadius: BALL_SIZE / 2,
     backgroundColor: 'red',
+    zIndex: 2,
   },
   scoreboard: {
     flexDirection: 'row',
@@ -207,5 +211,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFF',
     marginHorizontal: 10,
+  },
+  touchableArea: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: (height - SCOREBOARD_HEIGHT) * 0.5, // 60% of field height
+    backgroundColor: 'rgba(255, 255, 0, 0.2)', // Semi-transparent yellow
+    zIndex: 1,
   },
 });
