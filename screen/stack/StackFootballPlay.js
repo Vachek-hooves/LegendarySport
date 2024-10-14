@@ -32,7 +32,7 @@ const StackFootballPlay = () => {
   function getInitialBallPosition() {
     return {
       x: width / 2 - BALL_SIZE / 2,
-      y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE, // Just below the computer's gate
+      y: SCOREBOARD_HEIGHT + GATE_HEIGHT + BALL_SIZE+50, // Just below the computer's gate
     };
   }
 
@@ -76,6 +76,10 @@ const StackFootballPlay = () => {
         setBallPosition((prevPos) => {
           let newX = prevPos.x + ballVelocity.current.dx * FIXED_TIME_STEP;
           let newY = prevPos.y + ballVelocity.current.dy * FIXED_TIME_STEP;
+
+          // Constrain ball movement to the ImageBackground area
+          newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
+          newY = Math.max(SCOREBOARD_HEIGHT, Math.min(newY, height - BALL_SIZE));
 
           // Check if ball is out of bounds (touched top or bottom borders)
           if (newY <= SCOREBOARD_HEIGHT || newY >= height - BALL_SIZE) {
@@ -179,7 +183,6 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     height: '100%',
-    // backgroundColor: 'green',
     backgroundColor: COLOR.green,
   },
   gate: {
@@ -194,7 +197,7 @@ const styles = StyleSheet.create({
     top: SCOREBOARD_HEIGHT + 110,
   },
   bottomGate: {
-    bottom: '20%',
+    bottom: '20%', // Adjust this value to change the bottom gate position
   },
   ball: {
     position: 'absolute',
