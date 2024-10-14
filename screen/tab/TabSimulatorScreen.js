@@ -54,9 +54,15 @@ const TabSimulatorScreen = () => {
           let newX = prevPos.x + ballVelocity.current.dx * FIXED_TIME_STEP;
           let newY = prevPos.y + ballVelocity.current.dy * FIXED_TIME_STEP;
 
-          // Bounce off walls
+          // Check if ball is out of bounds (touched top or bottom borders)
+          if (newY <= SCOREBOARD_HEIGHT || newY >= height - BALL_SIZE) {
+            return resetBallPosition('out');
+          }
+
+          // Bounce off left and right walls
           if (newX <= 0 || newX >= width - BALL_SIZE) {
             ballVelocity.current.dx = -ballVelocity.current.dx;
+            newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
           }
 
           // Check for goals and update scores
@@ -65,22 +71,14 @@ const TabSimulatorScreen = () => {
               newX < (width + GATE_WIDTH) / 2) {
             setScores(prev => ({ ...prev, bottom: prev.bottom + 1 }));
             return resetBallPosition('bottom');
-          } else if (newY >= height - GATE_HEIGHT && 
+          } else if (newY >= height - GATE_HEIGHT - BALL_SIZE && 
                      newX > (width - GATE_WIDTH) / 2 && 
                      newX < (width + GATE_WIDTH) / 2) {
             setScores(prev => ({ ...prev, top: prev.top + 1 }));
             return resetBallPosition('top');
           }
 
-          // Bounce off top and bottom walls if not scoring
-          if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT || newY >= height - GATE_HEIGHT) {
-            ballVelocity.current.dy = -ballVelocity.current.dy;
-          }
-
-          return {
-            x: Math.max(0, Math.min(newX, width - BALL_SIZE)),
-            y: Math.max(SCOREBOARD_HEIGHT + GATE_HEIGHT, Math.min(newY, height - GATE_HEIGHT)),
-          };
+          return { x: newX, y: newY };
         });
 
         accumulator.current -= FIXED_TIME_STEP;
@@ -93,13 +91,9 @@ const TabSimulatorScreen = () => {
     return () => cancelAnimationFrame(animationFrame);
   }, []);
 
-  const resetBallPosition = (scoringGate) => {
+  const resetBallPosition = (reason) => {
     ballVelocity.current = getRandomVelocity();
-    if (scoringGate === 'bottom') {
-      ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Ensure downward movement
-    } else {
-      ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Always ensure downward movement
-    }
+    ballVelocity.current.dy = Math.abs(ballVelocity.current.dy); // Always ensure downward movement
     return getInitialBallPosition();
   };
 
