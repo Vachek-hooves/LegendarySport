@@ -18,7 +18,7 @@ const TabQuizScreen = ({ navigation }) => {
 
   const startQuiz = (sportId) => {
     const selectedSport = quizData.find((sport) => sport.id === sportId);
-    navigation.navigate('QuizGame', { sport: selectedSport });
+    navigation.navigate('StackQuizLevelScreen', { sport: selectedSport });
   };
 
   return (
