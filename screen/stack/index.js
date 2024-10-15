@@ -1,3 +1,5 @@
 import StackFootballPlay from './StackFootballPlay';
 import StackQuizLevelScreen from './StackQuizLevelScreen';
-export { StackFootballPlay, StackQuizLevelScreen };
+import StackTrainingDetailScreen from './StackTrainingDetailScreen';
+
+export { StackFootballPlay, StackQuizLevelScreen, StackTrainingDetailScreen };
