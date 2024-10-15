@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, ImageBackground, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, ImageBackground, SafeAreaView, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { training } from '../../data/training';
+import { useNavigation } from '@react-navigation/native';
 
 const StackTrainingDetailScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { trainingId } = route.params;
   const selectedTraining = training.find(item => item.id === trainingId);
 
@@ -28,6 +30,17 @@ const StackTrainingDetailScreen = ({ route }) => {
           <ScrollView contentContainerStyle={styles.scrollContainer}>
             <Text style={styles.title}>{selectedTraining.title}</Text>
             <Text style={styles.description}>{selectedTraining.description}</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('StackTrainingProgramScreen', { trainingId: selectedTraining.id })}
+              style={styles.buttonContainer}
+            >
+              <LinearGradient
+                colors={['#4c669f', '#3b5998', '#192f6a']}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>View Detailed Program</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
@@ -62,6 +75,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: 'white',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginTop: 20,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   errorText: {
     fontSize: 18,
