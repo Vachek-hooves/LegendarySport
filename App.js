@@ -9,7 +9,7 @@ import WelcomeScreen from './screen/WelcomeScreen';
 import {
   TabFootbalIntroScreen,
   TabQuizScreen,
-  TabSimulatorScreen,
+  TabTrainingScreen,
 } from './screen/tab';
 import { StackFootballPlay, StackQuizLevelScreen } from './screen/stack';
 
@@ -95,6 +95,11 @@ const TabNavigator = () => {
         name="TabQuizScreen"
         component={TabQuizScreen}
         options={{ tabBarLabel: 'Quiz' }}
+      />
+      <Tab.Screen
+        name="TabTrainingScreen"
+        component={TabTrainingScreen}
+        options={{ tabBarLabel: 'Training' }}
       />
     </Tab.Navigator>
   );
