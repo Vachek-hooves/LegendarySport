@@ -19,6 +19,7 @@ const StackTrainingProgramScreen = ({ route }) => {
     <ImageBackground 
       source={selectedTraining.image} 
       style={styles.backgroundImage}
+      blurRadius={3}
     >
       <LinearGradient
         colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.4)']}

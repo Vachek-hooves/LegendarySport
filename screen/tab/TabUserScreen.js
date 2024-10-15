@@ -75,6 +75,12 @@ const TabUserScreen = () => {
         >
           <Text style={styles.genderText}>Female</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.genderButton, gender === 'skip' && styles.selectedGender]}
+          onPress={() => setGender('skip')}
+        >
+          <Text style={styles.genderText}>Skip</Text>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
         <Text style={styles.buttonText}>Choose Profile Picture</Text>
@@ -96,7 +102,7 @@ const TabUserScreen = () => {
     <View style={styles.userInfo}>
       <Image source={{ uri: image }} style={styles.profileImage} />
       <Text style={styles.userName}>{user.name}</Text>
-      <Text style={styles.userGender}>{user.gender}</Text>
+      <Text style={styles.userGender}>{user.gender !== 'skip' ? user.gender : 'Not specified'}</Text>
       <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
         <LinearGradient
           colors={['#00FFFF', '#FF00FF', '#FF1493']}
@@ -139,9 +145,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    // justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 50,
   },
   container: {
     width: '80%',
@@ -158,7 +163,7 @@ const styles = StyleSheet.create({
     borderColor: '#00FFFF',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingHorizontal: 10,
     color: 'white',
   },
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   genderButton: {
     flex: 1,
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FF1493',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   saveButton: {
     width: '100%',
