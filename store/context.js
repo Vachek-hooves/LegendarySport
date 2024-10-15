@@ -37,8 +37,12 @@ export const AppContextProvider = ({ children }) => {
     try {
       const storedQuizData = await AsyncStorage.getItem('quizData');
       if (storedQuizData === null) {
-        await AsyncStorage.setItem('quizData', JSON.stringify(quiz));
-        setQuizData(quiz);
+        const updatedQuizData = quiz.map((sport, index) => ({
+          ...sport,
+          isActive: index === 0 // Set isActive to true for the first object, false for others
+        }));
+        await AsyncStorage.setItem('quizData', JSON.stringify(updatedQuizData));
+        setQuizData(updatedQuizData);
       } else {
         setQuizData(JSON.parse(storedQuizData));
       }

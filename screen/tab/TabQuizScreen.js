@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 import { useAppContext } from '../../store/context';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -9,7 +17,7 @@ const TabQuizScreen = ({ navigation }) => {
   const { quizData } = useAppContext();
 
   const startQuiz = (sportId) => {
-    const selectedSport = quizData.find(sport => sport.id === sportId);
+    const selectedSport = quizData.find((sport) => sport.id === sportId);
     navigation.navigate('QuizGame', { sport: selectedSport });
   };
 
@@ -24,17 +32,21 @@ const TabQuizScreen = ({ navigation }) => {
           style={styles.overlay}
         >
           <Text style={styles.title}>Choose a Sport</Text>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            showsVerticalScrollIndicator={false}
+          >
             {quizData.map((sport) => (
               <TouchableOpacity
                 key={sport.id}
                 onPress={() => startQuiz(sport.id)}
-                style={styles.sportButton}
+                style={[styles.sportButton, !sport.isActive && styles.inactiveButton]}
+                disabled={!sport.isActive}
               >
                 <LinearGradient
                   colors={['#00FFFF', '#FF00FF', '#FF1493']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   style={styles.gradient}
                 >
                   <Text style={styles.sportButtonText}>{sport.sport}</Text>
@@ -86,6 +98,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  inactiveButton: {
+    opacity: 0.5,
   },
   gradient: {
     flex: 1,
