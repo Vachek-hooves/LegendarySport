@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, FlatList, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { training } from '../../data/training';
 import { useNavigation } from '@react-navigation/native';
@@ -33,6 +33,7 @@ const TabTrainingScreen = () => {
           colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)']}
           style={styles.overlay}
         >
+          <SafeAreaView/>
           <Text style={styles.title}>Choose a Sport</Text>
           <FlatList
             data={training}
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   cardList: {
     paddingBottom: 20,

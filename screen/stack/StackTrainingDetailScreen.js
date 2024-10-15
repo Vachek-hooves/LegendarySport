@@ -74,10 +74,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    fontSize: 16,
+    fontSize: 22,
     lineHeight: 24,
     color: 'white',
     marginBottom: 20,
+    lineHeight:27
   },
   buttonContainer: {
     borderRadius: 20,

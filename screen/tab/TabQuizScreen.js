@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { useAppContext } from '../../store/context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,7 +24,7 @@ const TabQuizScreen = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/image/bg/illuminatedArrow.jpg')}
+      source={require('../../assets/image/bg/quiz.png')}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
@@ -31,6 +32,7 @@ const TabQuizScreen = ({ navigation }) => {
           colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)']}
           style={styles.overlay}
         >
+            <SafeAreaView/>
           <Text style={styles.title}>Choose a Sport</Text>
           <ScrollView
             contentContainerStyle={styles.scrollViewContent}
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 30,
+    marginBottom: 10,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
@@ -98,9 +100,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    opacity:0.7
   },
   inactiveButton: {
-    opacity: 0.5,
+    opacity: 0.2,
   },
   gradient: {
     flex: 1,
