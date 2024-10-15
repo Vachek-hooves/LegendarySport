@@ -35,7 +35,9 @@ const StackTrainingDetailScreen = ({ route }) => {
               style={styles.buttonContainer}
             >
               <LinearGradient
-                colors={['#4c669f', '#3b5998', '#192f6a']}
+                colors={['#00FFFF', '#FF00FF', '#FF1493']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>View Detailed Program</Text>
