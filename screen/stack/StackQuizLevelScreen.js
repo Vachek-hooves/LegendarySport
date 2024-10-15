@@ -17,13 +17,15 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     if (showResult) {
-      const updatedQuizData = quizData.map((item) => {
-        if (item.id === sport.id + 1) {
-          return { ...item, isActive: true };
-        }
-        return item;
-      });
-      updateQuizData(updatedQuizData);
+      if (score >= 9) {
+        const updatedQuizData = quizData.map((item) => {
+          if (item.id === sport.id + 1) {
+            return { ...item, isActive: true };
+          }
+          return item;
+        });
+        updateQuizData(updatedQuizData);
+      }
     }
   }, [showResult]);
 
@@ -95,6 +97,11 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
           >
             <Text style={styles.resultText}>Quiz Completed!</Text>
             <Text style={styles.resultText}>Your Score: {score}/{sport.questions.length}</Text>
+            {score >= 9 ? (
+              <Text style={styles.resultText}>Congratulations! You've unlocked the next level!</Text>
+            ) : (
+              <Text style={styles.resultText}>You need 9 or more correct answers to unlock the next level.</Text>
+            )}
             <TouchableOpacity onPress={restartQuiz} style={styles.button}>
               <LinearGradient
                 colors={['#00FFFF', '#FF00FF', '#FF1493']}
