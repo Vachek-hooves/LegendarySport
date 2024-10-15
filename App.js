@@ -11,7 +11,7 @@ import {
   TabQuizScreen,
   TabTrainingScreen,
 } from './screen/tab';
-import { StackFootballPlay, StackQuizLevelScreen } from './screen/stack';
+import { StackFootballPlay, StackQuizLevelScreen, StackTrainingDetailScreen } from './screen/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -119,6 +119,10 @@ function App() {
           <Stack.Screen
             name="StackQuizLevelScreen"
             component={StackQuizLevelScreen}
+          />
+          <Stack.Screen
+            name="StackTrainingDetailScreen"
+            component={StackTrainingDetailScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>
