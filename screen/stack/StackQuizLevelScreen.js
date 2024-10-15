@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Dimensions, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAppContext } from '../../store/context';
+
+const { width } = Dimensions.get('window');
 
 const StackQuizLevelScreen = ({ route, navigation }) => {
   const { sport } = route.params;
@@ -9,10 +11,10 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [buttonScale] = useState(new Animated.Value(1));
 
   useEffect(() => {
     if (showResult) {
-      // Update the next sport to be active when the quiz is completed
       const updatedQuizData = quizData.map((item) => {
         if (item.id === sport.id + 1) {
           return { ...item, isActive: true };
@@ -24,6 +26,11 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
   }, [showResult]);
 
   const handleAnswer = (selectedAnswer) => {
+    Animated.sequence([
+      Animated.timing(buttonScale, { toValue: 0.95, duration: 100, useNativeDriver: true }),
+      Animated.timing(buttonScale, { toValue: 1, duration: 100, useNativeDriver: true })
+    ]).start();
+
     if (selectedAnswer === sport.questions[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
@@ -39,6 +46,18 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
     setCurrentQuestion(0);
     setScore(0);
     setShowResult(false);
+  };
+
+  const renderProgressBar = () => {
+    const progress = (currentQuestion / sport.questions.length) * 100;
+    return (
+      <View style={styles.progressBarContainer}>
+        <View style={[styles.progressBar, { width: `${progress}%` }]} />
+        <Text style={styles.progressText}>
+          {currentQuestion + 1} / {sport.questions.length}
+        </Text>
+      </View>
+    );
   };
 
   if (showResult) {
@@ -90,22 +109,24 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
           colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)']}
           style={styles.overlay}
         >
+          {renderProgressBar()}
           <Text style={styles.questionText}>{sport.questions[currentQuestion].question}</Text>
           {sport.questions[currentQuestion].options.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleAnswer(option)}
-              style={styles.button}
-            >
-              <LinearGradient
-                colors={['#00FFFF', '#FF00FF', '#FF1493']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.gradient}
+            <Animated.View key={index} style={{ transform: [{ scale: buttonScale }] }}>
+              <TouchableOpacity
+                onPress={() => handleAnswer(option)}
+                style={styles.button}
               >
-                <Text style={styles.buttonText}>{option}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+                <LinearGradient
+                  colors={['#00FFFF', '#FF00FF', '#FF1493']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.gradient}
+                >
+                  <Text style={styles.buttonText}>{option}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </Animated.View>
           ))}
         </LinearGradient>
       </View>
@@ -127,6 +148,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  progressBarContainer: {
+    width: '100%',
+    height: 20,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#00FFFF',
+  },
+  progressText: {
+    position: 'absolute',
+    width: '100%',
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 20,
+  },
   questionText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -138,7 +180,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
   },
   button: {
-    width: '80%',
+    width: width * 0.8,
     height: 50,
     marginBottom: 15,
     borderRadius: 25,
