@@ -12,6 +12,8 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [buttonScale] = useState(new Animated.Value(1));
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
 
   useEffect(() => {
     if (showResult) {
@@ -25,27 +27,38 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
     }
   }, [showResult]);
 
-  const handleAnswer = (selectedAnswer) => {
+  const handleAnswer = (selected) => {
+    setSelectedAnswer(selected);
+    const correct = selected === sport.questions[currentQuestion].correctAnswer;
+    setIsAnswerCorrect(correct);
+
     Animated.sequence([
       Animated.timing(buttonScale, { toValue: 0.95, duration: 100, useNativeDriver: true }),
       Animated.timing(buttonScale, { toValue: 1, duration: 100, useNativeDriver: true })
     ]).start();
 
-    if (selectedAnswer === sport.questions[currentQuestion].correctAnswer) {
+    if (correct) {
       setScore(score + 1);
     }
 
-    if (currentQuestion + 1 < sport.questions.length) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setShowResult(true);
-    }
+    // Delay moving to the next question to show the feedback
+    setTimeout(() => {
+      if (currentQuestion + 1 < sport.questions.length) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+        setIsAnswerCorrect(null);
+      } else {
+        setShowResult(true);
+      }
+    }, 1000);
   };
 
   const restartQuiz = () => {
     setCurrentQuestion(0);
     setScore(0);
     setShowResult(false);
+    setSelectedAnswer(null);
+    setIsAnswerCorrect(null);
   };
 
   const renderProgressBar = () => {
@@ -58,6 +71,15 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
         </Text>
       </View>
     );
+  };
+
+  const getButtonColors = (option) => {
+    if (selectedAnswer === option) {
+      return isAnswerCorrect
+        ? ['#00FF00', '#00CC00', '#009900'] // Green neon for correct
+        : ['#FF0000', '#CC0000', '#990000']; // Red neon for incorrect
+    }
+    return ['#00FFFF', '#FF00FF', '#FF1493']; // Default neon colors
   };
 
   if (showResult) {
@@ -116,9 +138,10 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
               <TouchableOpacity
                 onPress={() => handleAnswer(option)}
                 style={styles.button}
+                disabled={selectedAnswer !== null}
               >
                 <LinearGradient
-                  colors={['#00FFFF', '#FF00FF', '#FF1493']}
+                  colors={getButtonColors(option)}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.gradient}
