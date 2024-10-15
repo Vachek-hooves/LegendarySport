@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Dimensions, Animated } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Dimensions, Animated, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAppContext } from '../../store/context';
 
@@ -90,7 +90,7 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
         source={require('../../assets/image/bg/illuminatedArrow.jpg')}
         style={styles.backgroundImage}
       >
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
           <LinearGradient
             colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)']}
             style={styles.overlay}
@@ -98,9 +98,15 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
             <Text style={styles.resultText}>Quiz Completed!</Text>
             <Text style={styles.resultText}>Your Score: {score}/{sport.questions.length}</Text>
             {score >= 9 ? (
-              <Text style={styles.resultText}>Congratulations! You've unlocked the next level!</Text>
+              <>
+                <Text style={styles.resultText}>Congratulations! You've unlocked the next level!</Text>
+                <Text style={styles.factText}>{sport.sportsmanFact}</Text>
+              </>
             ) : (
-              <Text style={styles.resultText}>You need 9 or more correct answers to unlock the next level.</Text>
+              <>
+                <Text style={styles.resultText}>You need 9 or more correct answers to unlock the next level.</Text>
+                <Text style={styles.adviceText}>{sport.adviceOnLoss}</Text>
+              </>
             )}
             <TouchableOpacity onPress={restartQuiz} style={styles.button}>
               <LinearGradient
@@ -123,7 +129,7 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
               </LinearGradient>
             </TouchableOpacity>
           </LinearGradient>
-        </View>
+        </ScrollView>
       </ImageBackground>
     );
   }
@@ -255,6 +261,30 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  factText: {
+    fontSize: 18,
+    color: '#00FFFF',
+    marginBottom: 20,
+    textAlign: 'center',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#00FFFF',
+    borderRadius: 10,
+  },
+  adviceText: {
+    fontSize: 18,
+    color: '#FF00FF',
+    marginBottom: 20,
+    textAlign: 'center',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#FF00FF',
+    borderRadius: 10,
   },
 });
 
