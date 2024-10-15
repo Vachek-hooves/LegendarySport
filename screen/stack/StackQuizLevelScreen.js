@@ -139,7 +139,10 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
           style={styles.overlay}
         >
           {renderProgressBar()}
+          <View style={styles.questionContainer}>
+
           <Text style={styles.questionText}>{sport.questions[currentQuestion].question}</Text>
+          </View>
           {sport.questions[currentQuestion].options.map((option, index) => (
             <Animated.View key={index} style={{ transform: [{ scale: buttonScale }] }}>
               <TouchableOpacity
@@ -164,7 +167,12 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
+  questionContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+  },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
@@ -180,7 +188,7 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     width: '100%',
-    height: 20,
+    height: 30,
     backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 10,
     marginBottom: 20,
@@ -194,10 +202,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: '#FF1493',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 18,
     lineHeight: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   questionText: {
     fontSize: 24,
@@ -210,9 +220,9 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
   },
   button: {
-    width: width * 0.8,
-    height: 50,
-    marginBottom: 15,
+    width: width * 0.9,
+    height: 60,
+    marginBottom: 20,
     borderRadius: 25,
     overflow: 'hidden',
     elevation: 5,
@@ -229,7 +239,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
