@@ -10,8 +10,9 @@ import {
   TabFootbalIntroScreen,
   TabQuizScreen,
   TabTrainingScreen,
+  TabUserScreen,
 } from './screen/tab';
-import { StackFootballPlay, StackQuizLevelScreen, StackTrainingDetailScreen, StackTrainingProgramScreen } from './screen/stack';
+import { StackFootballPlay, StackQuizLevelScreen, StackTrainingDetailScreen, StackTrainingProgramScreen,  } from './screen/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -100,6 +101,11 @@ const TabNavigator = () => {
         name="TabTrainingScreen"
         component={TabTrainingScreen}
         options={{ tabBarLabel: 'Training' }}
+      />
+      <Tab.Screen
+        name="TabUserScreen"
+        component={TabUserScreen}
+        options={{ tabBarLabel: 'User' }}
       />
     </Tab.Navigator>
   );
