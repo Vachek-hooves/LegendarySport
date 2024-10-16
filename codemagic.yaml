@@ -3,7 +3,7 @@ workflows:
     name: Legendary Sports Moments
     max_build_duration: 120
     integrations:
-      app_store_connect:
+      app_store_connect: LegendarySportsCodemagicApiKey
     environment:
       ios_signing:
         distribution_type: app_store
