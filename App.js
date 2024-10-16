@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppContextProvider } from './store/context';
-import WelcomeScreen from './screen/WelcomeScreen';
+import WelcomeScreen from './screen/stack/WelcomeScreen';
 import {
   TabFootbalIntroScreen,
   TabQuizScreen,
@@ -115,9 +115,10 @@ function App() {
   return (
     <AppContextProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        <Stack.Navigator screenOptions={{ headerShown: false,animation:'fade',animationDuration:1000 }}>
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          
           <Stack.Screen
             name="StackFootballPlay"
             component={StackFootballPlay}
