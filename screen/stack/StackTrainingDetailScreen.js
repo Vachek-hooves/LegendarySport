@@ -43,6 +43,20 @@ const StackTrainingDetailScreen = ({ route }) => {
                 <Text style={styles.buttonText}>View Detailed Program</Text>
               </LinearGradient>
             </TouchableOpacity>
+            <View style={styles.spacer} />
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.buttonContainer}
+            >
+              <LinearGradient
+                colors={['#FF1493', '#FF00FF', '#00FFFF']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Return</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
@@ -74,16 +88,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    fontSize: 22,
+    fontSize: 16,
     lineHeight: 24,
     color: 'white',
     marginBottom: 20,
-    lineHeight:27
   },
   buttonContainer: {
     borderRadius: 20,
     overflow: 'hidden',
     marginTop: 20,
+  },
+  returnButtonContainer: {
+    marginTop: 10, // Add some space between the buttons
   },
   button: {
     paddingVertical: 12,
@@ -101,5 +117,8 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+  },
+  spacer: {
+    height: 20,
   },
 });

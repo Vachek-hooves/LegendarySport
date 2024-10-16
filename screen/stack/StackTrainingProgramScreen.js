@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { training } from '../../data/training';
+import { useNavigation } from '@react-navigation/native';
 
 const StackTrainingProgramScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { trainingId } = route.params;
   const selectedTraining = training.find(item => item.id === trainingId);
 
@@ -19,7 +21,7 @@ const StackTrainingProgramScreen = ({ route }) => {
     <ImageBackground 
       source={selectedTraining.image} 
       style={styles.backgroundImage}
-      blurRadius={3}
+      blurRadius={2}
     >
       <LinearGradient
         colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.4)']}
@@ -43,6 +45,20 @@ const StackTrainingProgramScreen = ({ route }) => {
                 ))}
               </View>
             ))}
+            <View style={styles.spacer} />
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.buttonContainer}
+            >
+              <LinearGradient
+                colors={['#FF1493', '#FF00FF', '#00FFFF']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Return</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
@@ -109,5 +125,24 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+  },
+  spacer: {
+    height: 20,
+  },
+  buttonContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginTop: 20,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
