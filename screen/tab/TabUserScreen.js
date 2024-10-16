@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, I
 import LinearGradient from 'react-native-linear-gradient';
 import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SoundControl from '../../components/bgSound/Control';
 
 const TabUserScreen = () => {
   const [user, setUser] = useState(null);
@@ -129,6 +130,7 @@ const TabUserScreen = () => {
         style={styles.overlay}
       >
         <SafeAreaView/>
+        <SoundControl/>
         <View style={styles.container}>
           {user && !isEditing ? renderUserInfo() : renderForm()}
         </View>
@@ -149,6 +151,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     // mpaddingTop:30
+    paddingTop:160
   },
   container: {
     width: '80%',

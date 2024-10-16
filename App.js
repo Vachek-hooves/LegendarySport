@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React,{useEffect} from 'react';
+import { View, Text, TouchableOpacity ,Platform,AppState} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,7 +12,13 @@ import {
   TabTrainingScreen,
   TabUserScreen,
 } from './screen/tab';
-import { StackFootballPlay, StackQuizLevelScreen, StackTrainingDetailScreen, StackTrainingProgramScreen,  } from './screen/stack';
+import {
+  StackFootballPlay,
+  StackQuizLevelScreen,
+  StackTrainingDetailScreen,
+  StackTrainingProgramScreen,
+} from './screen/stack';
+import { playBackgroundMusic,resetPlayer } from './components/bgSound/setupPlayer';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,13 +118,45 @@ const TabNavigator = () => {
 };
 
 function App() {
+  
+  useEffect(() => {
+    const initializePlayer = async () => {
+      try {
+        await playBackgroundMusic();
+      } catch (error) {
+        console.error('Error initializing player:', error);
+      }
+    };
+
+    initializePlayer();
+
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        resetPlayer();
+      } else if (nextAppState === 'active') {
+        playBackgroundMusic();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+      resetPlayer();
+    };
+  }, []);
+
   return (
     <AppContextProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false,animation:'fade',animationDuration:1000 }}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            animation: 'fade',
+            animationDuration: 1000,
+          }}
+        >
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
-          
+
           <Stack.Screen
             name="StackFootballPlay"
             component={StackFootballPlay}
