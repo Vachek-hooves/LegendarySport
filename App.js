@@ -88,6 +88,11 @@ const TabNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen
+        name="TabUserScreen"
+        component={TabUserScreen}
+        options={{ tabBarLabel: 'User' }}
+      />
+      <Tab.Screen
         name="TabFootbalIntroScreen"
         component={TabFootbalIntroScreen}
         options={{ tabBarLabel: 'Football' }}
@@ -101,11 +106,6 @@ const TabNavigator = () => {
         name="TabTrainingScreen"
         component={TabTrainingScreen}
         options={{ tabBarLabel: 'Training' }}
-      />
-      <Tab.Screen
-        name="TabUserScreen"
-        component={TabUserScreen}
-        options={{ tabBarLabel: 'User' }}
       />
     </Tab.Navigator>
   );

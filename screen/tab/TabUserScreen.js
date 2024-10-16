@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -128,6 +128,7 @@ const TabUserScreen = () => {
         colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)']}
         style={styles.overlay}
       >
+        <SafeAreaView/>
         <View style={styles.container}>
           {user && !isEditing ? renderUserInfo() : renderForm()}
         </View>
@@ -145,8 +146,9 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
+    // mpaddingTop:30
   },
   container: {
     width: '80%',
