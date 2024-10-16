@@ -514,6 +514,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.legendary.sportmoments;
 				PRODUCT_NAME = ReactNativeTemplate;
+				SWIFT_OPTIMIZATION_LEVEL = "-0";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
