@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { COLOR } from '../../constant/color';
 import { useAppContext } from '../../store/context';
+import LinearGradient from 'react-native-linear-gradient';
+import Orientation from 'react-native-orientation-locker';
 
 const { width, height } = Dimensions.get('window');
 const BALL_SIZE = 30;
@@ -36,6 +38,14 @@ const StackFootballPlay = ({ navigation }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [score, setScore] = useState(0);
 
+  useEffect(() => {
+    Orientation.lockToPortrait();
+
+    return () => {
+      Orientation.unlockAllOrientations();
+    };
+  }, []);
+
   function getInitialBallPosition() {
     return {
       x: width / 2 - BALL_SIZE / 2,
@@ -53,23 +63,23 @@ const StackFootballPlay = ({ navigation }) => {
   }
 
   const handleBallPress = () => {
-    console.log('Ball pressed');
+    // console.log('Ball pressed');
     if (ballPosition.y >= TOUCHABLE_AREA_START) {
-      console.log('Ball in touchable area, kicking');
+      // console.log('Ball in touchable area, kicking');
       ballVelocity.current = {
         ...ballVelocity.current,
         dy: -Math.abs(ballVelocity.current.dy) - 0.2, // Kick the ball upwards with extra speed
       };
-      console.log('Ball kicked!', ballVelocity.current);
+      // console.log('Ball kicked!', ballVelocity.current);
       // Force an update to ensure the new velocity is applied immediately
-      setBallPosition((prevPos) => ({ ...prevPos }));
+      // setBallPosition((prevPos) => ({ ...prevPos }));
     } else {
-      console.log('Ball not in touchable area, not kicking');
+      // console.log('Ball not in touchable area, not kicking');
     }
   };
 
   useEffect(() => {
-    console.log('Game loop started');
+    // console.log('Game loop started');
     ballVelocity.current = getRandomVelocity();
 
     const updateGame = () => {
@@ -100,7 +110,7 @@ const StackFootballPlay = ({ navigation }) => {
               newX > (width - GATE_WIDTH) / 2 &&
               newX < (width + GATE_WIDTH) / 2
             ) {
-              console.log('Goal scored by computer');
+              // console.log('Goal scored by computer');
               setScores((prev) => ({ ...prev, top: prev.top + 1 }));
               return resetBallPosition('top');
             } else {
@@ -120,9 +130,9 @@ const StackFootballPlay = ({ navigation }) => {
             newX > (width - GATE_WIDTH) / 2 &&
             newX < (width + GATE_WIDTH) / 2
           ) {
-            console.log('Goal scored by player');
+            // console.log('Goal scored by player');
             setScores((prev) => ({ ...prev, bottom: prev.bottom + 1 }));
-            setScore(prevScore => prevScore + 1);
+            setScore((prevScore) => prevScore + 1);
             return resetBallPosition('bottom');
           }
 
@@ -139,14 +149,14 @@ const StackFootballPlay = ({ navigation }) => {
     return () => cancelAnimationFrame(animationFrame);
   }, []);
   const resetBallPosition = (reason) => {
-    console.log('Resetting ball position, reason:', reason);
+    // console.log('Resetting ball position, reason:', reason);
     if (reason === 'bottom') {
       ballSpeed.current *= 1.1;
-      console.log('New ball speed:', ballSpeed.current);
+      // console.log('New ball speed:', ballSpeed.current);
     }
     ballVelocity.current = getRandomVelocity();
     ballVelocity.current.dy = Math.abs(ballVelocity.current.dy);
-    console.log('New ball velocity:', ballVelocity.current);
+    // console.log('New ball velocity:', ballVelocity.current);
 
     if (reason === 'out_bottom') {
       setGameOver(true);
@@ -189,15 +199,22 @@ const StackFootballPlay = ({ navigation }) => {
       style={styles.imageBackground}
       source={require('../../assets/image/bg/FootballField.png')}
     >
+      {/* <LinearGradient
+        colors={['#FF0000', '#DC143C', '#B22222']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.gradient}
+      > */}
       {/* <View style={styles.container}> */}
       <SafeAreaView></SafeAreaView>
       <View style={styles.scoreboard}>
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>Computer</Text>
           <Text style={styles.scoreText}>{scores.top}</Text>
-        </View><View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
-      </View>
+        </View>
+        <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+        </View>
         <Text style={styles.scoreDivider}>:</Text>
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>You</Text>
@@ -217,12 +234,12 @@ const StackFootballPlay = ({ navigation }) => {
         />
       </TouchableOpacity>
       <View style={[styles.gate, styles.bottomGate]} />
-      
-      
+
       {/* <View style={styles.scoreContainer}>
         <Text style={styles.scoreText}>Score: {score}</Text>
         <Text style={styles.scoreText}>Points: {score * 10}</Text>
       </View> */}
+      {/* </LinearGradient> */}
     </ImageBackground>
     // </SafeAreaView>
   );
@@ -231,6 +248,12 @@ const StackFootballPlay = ({ navigation }) => {
 export default StackFootballPlay;
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+  },
   safeArea: {
     // flex: 1,
     // backgroundColor: '#F0F0F0',
@@ -242,7 +265,7 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     height: '105%',
-    backgroundColor: COLOR.green,
+    backgroundColor: COLOR.red,
   },
   gate: {
     position: 'absolute',

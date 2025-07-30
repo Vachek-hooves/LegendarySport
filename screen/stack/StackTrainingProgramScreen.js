@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#00FFFF',
+    color: '#FF0000',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 10,
     marginBottom: 5,
-    color: '#FF00FF',
+    color: '#DC143C',
   },
   exerciseText: {
     fontSize: 16,

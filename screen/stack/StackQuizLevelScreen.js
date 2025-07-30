@@ -81,7 +81,7 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
         ? ['#00FF00', '#00CC00', '#009900'] // Green neon for correct
         : ['#FF0000', '#CC0000', '#990000']; // Red neon for incorrect
     }
-    return ['#00FFFF', '#FF00FF', '#FF1493']; // Default neon colors
+    return ['#FF0000', '#DC143C', '#B22222']; // Default bright red colors
   };
 
   if (showResult) {
@@ -110,7 +110,7 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
             )}
             <TouchableOpacity onPress={restartQuiz} style={styles.button}>
               <LinearGradient
-                colors={['#00FFFF', '#FF00FF', '#FF1493']}
+                colors={['#FF0000', '#DC143C', '#B22222']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
@@ -120,7 +120,7 @@ const StackQuizLevelScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
               <LinearGradient
-                colors={['#00FFFF', '#FF00FF', '#FF1493']}
+                colors={['#FF0000', '#DC143C', '#B22222']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
@@ -202,13 +202,13 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#00FFFF',
+    backgroundColor: '#FF0000',
   },
   progressText: {
     position: 'absolute',
     width: '100%',
     textAlign: 'center',
-    color: '#FF1493',
+    color: '#B22222',
     fontWeight: 'bold',
     fontSize: 18,
     lineHeight: 20,
@@ -268,22 +268,22 @@ const styles = StyleSheet.create({
   },
   factText: {
     fontSize: 18,
-    color: '#00FFFF',
+    color: '#FF0000',
     marginBottom: 20,
     textAlign: 'center',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#00FFFF',
+    borderColor: '#FF0000',
     borderRadius: 10,
   },
   adviceText: {
     fontSize: 18,
-    color: '#FF00FF',
+    color: '#DC143C',
     marginBottom: 20,
     textAlign: 'center',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#FF00FF',
+    borderColor: '#DC143C',
     borderRadius: 10,
   },
 });

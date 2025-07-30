@@ -44,7 +44,7 @@ const TabUserScreen = () => {
   const pickImage = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
@@ -87,7 +87,7 @@ const TabUserScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton} onPress={saveUserData}>
         <LinearGradient
-          colors={['#00FFFF', '#FF00FF', '#FF1493']}
+          colors={['#FF0000', '#DC143C', '#B22222']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.gradient}
@@ -105,7 +105,7 @@ const TabUserScreen = () => {
       <Text style={styles.userGender}>{user.gender !== 'skip' ? user.gender : 'Not specified'}</Text>
       <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
         <LinearGradient
-          colors={['#00FFFF', '#FF00FF', '#FF1493']}
+          colors={['#FF0000', '#DC143C', '#B22222']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.gradient}
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    borderColor: '#00FFFF',
+    borderColor: '#FF0000',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
@@ -180,12 +180,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#FF00FF',
+    borderColor: '#DC143C',
     alignItems: 'center',
     marginHorizontal: 5,
   },
   selectedGender: {
-    backgroundColor: 'rgba(255,0,255,0.3)',
+    backgroundColor: 'rgba(220,20,60,0.3)',
   },
   genderText: {
     color: 'white',
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#FF1493',
+    borderColor: '#B22222',
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -224,12 +224,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#00FFFF',
+    color: '#FF0000',
     marginBottom: 10,
   },
   userGender: {
     fontSize: 18,
-    color: '#FF00FF',
+    color: '#DC143C',
     marginBottom: 20,
   },
   editButton: {

@@ -35,23 +35,23 @@ const TabSimulatorScreen = () => {
   }
 
   const handleBallPress = () => {
-    console.log('Ball pressed');
+    // console.log('Ball pressed');
     if (ballPosition.y >= TOUCHABLE_AREA_START) {
-      console.log('Ball in touchable area, kicking');
+      // console.log('Ball in touchable area, kicking');
       ballVelocity.current = {
         ...ballVelocity.current,
         dy: -Math.abs(ballVelocity.current.dy) - 0.2 // Kick the ball upwards with extra speed
       };
-      console.log('Ball kicked!', ballVelocity.current);
+      // console.log('Ball kicked!', ballVelocity.current);
       // Force an update to ensure the new velocity is applied immediately
       setBallPosition(prevPos => ({ ...prevPos }));
     } else {
-      console.log('Ball not in touchable area, not kicking');
+      // console.log('Ball not in touchable area, not kicking');
     }
   };
 
   useEffect(() => {
-    console.log('Game loop started');
+    // console.log('Game loop started');
     ballVelocity.current = getRandomVelocity();
 
     const updateGame = () => {
@@ -68,13 +68,13 @@ const TabSimulatorScreen = () => {
 
           // Check if ball is out of bounds (touched top or bottom borders)
           if (newY <= SCOREBOARD_HEIGHT || newY >= height - BALL_SIZE) {
-            console.log('Ball out of bounds, resetting');
+            // console.log('Ball out of bounds, resetting');
             return resetBallPosition('out');
           }
 
           // Bounce off left and right walls
           if (newX <= 0 || newX >= width - BALL_SIZE) {
-            console.log('Ball hit side wall, bouncing');
+            // console.log('Ball hit side wall, bouncing');
             ballVelocity.current.dx = -ballVelocity.current.dx;
             newX = Math.max(0, Math.min(newX, width - BALL_SIZE));
           }
@@ -83,13 +83,13 @@ const TabSimulatorScreen = () => {
           if (newY <= SCOREBOARD_HEIGHT + GATE_HEIGHT && 
               newX > (width - GATE_WIDTH) / 2 && 
               newX < (width + GATE_WIDTH) / 2) {
-            console.log('Goal scored by player');
+            // console.log('Goal scored by player');
             setScores(prev => ({ ...prev, bottom: prev.bottom + 1 }));
             return resetBallPosition('bottom');
           } else if (newY >= height - GATE_HEIGHT - BALL_SIZE && 
                      newX > (width - GATE_WIDTH) / 2 && 
                      newX < (width + GATE_WIDTH) / 2) {
-            console.log('Goal scored by computer');
+            // console.log('Goal scored by computer');
             setScores(prev => ({ ...prev, top: prev.top + 1 }));
             return resetBallPosition('top');
           }
@@ -108,14 +108,14 @@ const TabSimulatorScreen = () => {
   }, []);
 
   const resetBallPosition = (reason) => {
-    console.log('Resetting ball position, reason:', reason);
+    // console.log('Resetting ball position, reason:', reason);
     if (reason === 'bottom') {
       ballSpeed.current *= 1.1;
-      console.log('New ball speed:', ballSpeed.current);
+      // console.log('New ball speed:', ballSpeed.current);
     }
     ballVelocity.current = getRandomVelocity();
     ballVelocity.current.dy = Math.abs(ballVelocity.current.dy);
-    console.log('New ball velocity:', ballVelocity.current);
+    // console.log('New ball velocity:', ballVelocity.current);
     return getInitialBallPosition();
   };
 
