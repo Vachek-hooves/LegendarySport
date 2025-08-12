@@ -79,7 +79,7 @@ android {
 
     namespace "com.reactnativetemplate"
     defaultConfig {
-        applicationId "legendary.sport.win.to.day"
+        applicationId "sport.win.to.day.to.legendary"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
